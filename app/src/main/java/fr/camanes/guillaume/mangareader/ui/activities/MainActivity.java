@@ -10,6 +10,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -21,6 +23,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.io.File;
+import java.util.List;
 
 import fr.camanes.guillaume.mangareader.R;
 
@@ -60,6 +65,20 @@ public class MainActivity extends AppCompatActivity
         registerReceiver();
 
         checkStoragePermission();
+
+        for (File file : getMangaList()) {
+            if (!file.getAbsolutePath().equalsIgnoreCase(Environment.getExternalStorageDirectory().getAbsolutePath()) && file.isDirectory() && file.canRead()) {
+                Log.e("manga", file.getAbsolutePath());
+            }
+        }
+    }
+
+    File[] getMangaList() {
+        String storagePath = PreferenceManager.getDefaultSharedPreferences(this).
+                getString(SettingsActivity.SHARED_PREF_STORAGE, Environment.getExternalStorageDirectory().getAbsolutePath());
+
+        File fileList[] = new File(storagePath+"/manga-reader/").listFiles();
+        return fileList;
     }
 
     void checkStoragePermission() {
@@ -79,7 +98,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-
 
     @Override
     protected void onDestroy()

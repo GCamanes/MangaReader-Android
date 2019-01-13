@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,10 +9,11 @@
     tools:showIn="@layout/activity_settings">
 
     <LinearLayout
+        android:id="@+id/layout_storage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp">
+        android:layout_marginLeft="16dp">
         <CheckBox
             android:id="@+id/checkbox_storagetype"
             android:checked="true"
@@ -25,4 +26,24 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@id/layout_storage">
+        <ImageView
+            android:src="@drawable/ic_warning_black_24dp"
+            android:checked="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="La recherche se fait sur le dossier 'manga-reader'"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

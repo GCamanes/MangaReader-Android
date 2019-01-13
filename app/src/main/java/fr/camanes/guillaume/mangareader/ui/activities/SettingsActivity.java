@@ -2,14 +2,18 @@ package fr.camanes.guillaume.mangareader.ui.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+
+import java.io.File;
 
 import fr.camanes.guillaume.mangareader.R;
 
@@ -17,7 +21,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private CheckBox checkboxStorageType;
 
-    private static final String SHARED_PREF_STORAGE_TYPE = "settings_keepUserAnswersOnRefresh";
+    public static final String SHARED_PREF_STORAGE = "settings_storagePath";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +40,34 @@ public class SettingsActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = mSettings.edit();
 
                 boolean saveUserAnswers = buttonView.isChecked();
-                editor.putBoolean(SHARED_PREF_STORAGE_TYPE, saveUserAnswers);
+
+                String savedStoragePath = getStoragePath(saveUserAnswers);
+                Log.e("storage path", savedStoragePath);
+
+                editor.putString(SHARED_PREF_STORAGE, savedStoragePath);
 
                 editor.apply();
             }
         });
 
-        checkboxStorageType.setChecked(
-                PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this).
-                        getBoolean(SHARED_PREF_STORAGE_TYPE, false));
+        String storagePath = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this).
+                getString(SHARED_PREF_STORAGE, Environment.getExternalStorageDirectory().getAbsolutePath());
 
+        checkboxStorageType.setChecked(!storagePath.equals(Environment.getExternalStorageDirectory().getAbsolutePath()));
     }
 
+    private String getStoragePath(boolean storagePreference) {
+
+        if (storagePreference) {
+            File fileList[] = new File("/storage/").listFiles();
+            for (File file : fileList) {
+                if (!file.getAbsolutePath().equalsIgnoreCase(Environment.getExternalStorageDirectory().getAbsolutePath()) && file.isDirectory() && file.canRead()) {
+                    return file.getAbsolutePath();
+                }
+            }
+            return Environment.getExternalStorageDirectory().getAbsolutePath();
+        } else {
+            return Environment.getExternalStorageDirectory().getAbsolutePath();
+        }
+    }
 }
