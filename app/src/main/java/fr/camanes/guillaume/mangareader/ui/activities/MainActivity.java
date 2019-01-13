@@ -1,12 +1,17 @@
 package fr.camanes.guillaume.mangareader.ui.activities;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,6 +30,10 @@ public class MainActivity extends AppCompatActivity
     private Boolean connection_status;
     InternalNetworkChangeReceiver internalNetworkChangeReceiver;
     MenuItem item_connectivity;
+
+    private static final int SDCARD_PERMISSION = 1,
+            FOLDER_PICKER_CODE = 2,
+            FILE_PICKER_CODE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +59,27 @@ public class MainActivity extends AppCompatActivity
         internalNetworkChangeReceiver = new InternalNetworkChangeReceiver();
         registerReceiver();
 
+        checkStoragePermission();
     }
+
+    void checkStoragePermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            //Write permission is required so that folder picker can create new folder.
+            //If you just want to pick files, Read permission is enough.
+
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        SDCARD_PERMISSION);
+            }
+        }
+    }
+
 
     @Override
     protected void onDestroy()

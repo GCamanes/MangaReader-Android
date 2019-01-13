@@ -8,4 +8,21 @@
     tools:context=".ui.activities.SettingsActivity"
     tools:showIn="@layout/activity_settings">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp">
+        <CheckBox
+            android:id="@+id/checkbox_storagetype"
+            android:checked="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="Stockage sur carte SD ?"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
